@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "ce3b2a14-af69-46c5-9179-078db6e87bac",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 200,
+  "height": 200,
+  "platformSettings": {},
+  "subMetas": {
+    "fishing_newGuide_growMaskLight": {
+      "ver": "1.0.4",
+      "uuid": "ace4da7f-a582-44c3-ae5b-c3b656455b73",
+      "rawTextureUuid": "ce3b2a14-af69-46c5-9179-078db6e87bac",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 200,
+      "height": 200,
+      "rawWidth": 200,
+      "rawHeight": 200,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

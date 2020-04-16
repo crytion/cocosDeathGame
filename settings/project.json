@@ -1,0 +1,83 @@
+{
+  "collision-matrix": [
+    [
+      false,
+      true
+    ],
+    [
+      true,
+      true
+    ],
+    [
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "excluded-modules": [
+    "Audio",
+    "AudioSource",
+    "Animation",
+    "DragonBones",
+    "EditBox",
+    "Layout",
+    "Label Effect",
+    "NodePool",
+    "Native Socket",
+    "PageView",
+    "PageViewIndicator",
+    "ProgressBar",
+    "ParticleSystem",
+    "Slider",
+    "ScrollBar",
+    "ScrollView",
+    "Spine Skeleton",
+    "StudioComponent",
+    "Toggle",
+    "TiledMap",
+    "VideoPlayer",
+    "WebView",
+    "3D",
+    "3D Primitive",
+    "3D Physics/cannon.js",
+    "3D Physics/Builtin",
+    "3D Particle"
+  ],
+  "group-list": [
+    "Wall",
+    "player",
+    "GameCamera",
+    "UICamera"
+  ],
+  "start-scene": "40b216a6-400d-4970-90a2-5dbe0de56050",
+  "design-resolution-width": 960,
+  "design-resolution-height": 640,
+  "fit-width": false,
+  "fit-height": true,
+  "use-project-simulator-setting": false,
+  "simulator-orientation": false,
+  "use-customize-simulator": true,
+  "simulator-resolution": {
+    "height": 640,
+    "width": 960
+  },
+  "last-module-event-record-time": 1586855458127,
+  "assets-sort-type": "name",
+  "facebook": {
+    "appID": "",
+    "audience": {
+      "enable": false
+    },
+    "enable": false,
+    "live": {
+      "enable": false
+    }
+  },
+  "migrate-history": []
+}

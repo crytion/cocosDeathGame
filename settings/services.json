@@ -1,0 +1,23 @@
+{
+	"game": {
+		"name": "躲猫猫",
+		"appid": "631174935",
+		"cid": "0"
+	},
+	"configs": [
+		{
+			"appid": "631174935",
+			"services": [
+				{
+					"service_id": "241",
+					"enable": true
+				},
+				{
+					"service_id": "242",
+					"enable": false
+				}
+			]
+		}
+	],
+	"needExecNative": true
+}
