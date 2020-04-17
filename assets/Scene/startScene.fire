@@ -198,7 +198,7 @@
       "array": [
         0,
         0,
-        467.43470179039684,
+        474.7661533861682,
         0,
         0,
         0,
@@ -296,7 +296,7 @@
       "array": [
         0,
         0,
-        467.43470179039684,
+        474.7661533861682,
         0,
         0,
         0,
@@ -394,7 +394,7 @@
       "array": [
         0,
         0,
-        467.43470179039684,
+        474.7661533861682,
         0,
         0,
         0,
@@ -3761,7 +3761,7 @@
       "__id__": 75
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 77
@@ -3842,7 +3842,7 @@
     "_underlineHeight": 0,
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
-    "_N$fontFamily": "Arial",
+    "_N$fontFamily": "黑体",
     "_N$overflow": 0,
     "_N$cacheMode": 0,
     "_id": "465kmx5PZEi4mU6aSKf+pQ"
@@ -5893,6 +5893,8 @@
     "nStayInMachineTime": 0,
     "nMachineNum": 3,
     "nMonsterUserID": 0,
+    "postionManArr": [],
+    "postionMachineArr": [],
     "_id": "15MtUQTJdDaYnpuN1/2xHk"
   }
 ]
