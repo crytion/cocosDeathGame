@@ -107,24 +107,11 @@ cc.Class({
         nodeWaitPlayerArr: [],      //等待玩家加入界面玩家节点数组
         nodeMachineNodeArr: [],     //电机节点数组
         nodeArrowNodeArr: [],       //电机位置预览数组
-
         nStayInMachineTime: 0,      //靠近电机一共多长时间了
         nMachineNum: 0,             //本局游戏应该有多少电机
         nMonsterUserID: 0,          //猎人玩家ID
-        //X个人类位, 其中一个会变猎人
-        postionManArr: [
-            cc.v2(67 * 5, 148 * 5), cc.v2(383 * 5, 96 * 5),
-            cc.v2(-131 * 5, 185 * 5), cc.v2(192 * 5, 211 * 5),
-            cc.v2(-219 * 5, -157 * 5), cc.v2(-382 * 5, -117 * 5),
-            cc.v2(405 * 5, -74 * 5), cc.v2(-337 * 5, 162 * 5),],
-        //电机位置
-        postionMachineArr: [
-            cc.v2(0, -213 * 5),
-            cc.v2(0, 169 * 5),
-            cc.v2(-320 * 5, 0),
-            cc.v2(329 * 5, 0),
-            cc.v2(0, 0),
-        ],
+        postionManArr: [],//X个人类位, 其中一个会变猎人
+        postionMachineArr: [], //电机位置
     },
 
 
@@ -1022,7 +1009,7 @@ cc.Class({
             let nDistance = myPos.sub(posMachine).mag();
 
             //距离远的机子就显示方向
-            if (nDistance > 600)
+            if (nDistance > 300)
             {
                 this.nodeArrowNodeArr[i].active = true;
                 //向量减法
