@@ -9,10 +9,10 @@ export class GameDefine
     static nMonsterMoveSpeed: number = 150; //每秒120像素
     static nManMoveSpeed: number = 100; //每秒100像素
 
-    static nMyPoint: number = 0;
-    static objOtherPoint = [];
-    static bIAmMonster: boolean = false;
-    static nCatchedNum: number = 0;
+    static nMyPoint: number = 0;  //本次游戏我投掷的点数,用来比较大小计算身份
+    static objOtherPoint = [];    //别人发来的点数数组,用来比较大小计算身份
+    static bIAmMonster: boolean = false;  //自己是不是猎人
+    static nCatchedNum: number = 0;        //自己是猎人抓住多少
     static nGameType: number = 1;//0,单人   1,多人
 
     /////////////////////////////////////////////////////
@@ -48,10 +48,10 @@ export let CrtEventType =
 
 export let MsgType =
 {
-    msgPlayerMove:0,
-    msgPlayerPoint:1,
-    msgPlayerCatched:2,
-    msgPlayerFixMachine:3,
+    msgPlayerMove:0,             //玩家移动的网络消息
+    msgPlayerPoint:1,               //玩家投掷点数网络消息
+    msgPlayerCatched:2,             //玩家被抓网络消息
+    msgPlayerFixMachine:3,          //玩家修复电机网络消息
 };
 
 window["GameDefine"] = GameDefine;

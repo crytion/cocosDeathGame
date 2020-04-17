@@ -93,25 +93,38 @@ cc.Class({
         prefabWaitPlayer: null,
         prefabMachine: null,
         prefabArrow: null,
-        nodeMainPlayer: null,
-        arrWallNode: [],
-        bCanMove: false,
+        nodeMainPlayer: null, //自己的玩家Node节点,
+        arrWallNode: [],    //所有墙体节点
+        bCanMove: false,    //是不是点击了移动键
         fPerFrameSpeed: 0,  //玩家移速,人和怪不同
-        //当前的状态
-        arrPlayerMoveStatus: [],
+        arrPlayerMoveStatus: [],//当前的移动状态,因为会多点触控,所以全部存到数组中,相应最后一次输入就行
         resourceUtils: null,
         fSin45: 0.707, //sin45度
-        roomUserList: [],
-        bGameStarted: false,
-        nUpdateCounts: 0,
-        arrPlayerInfo: [],
-        nodeWaitPlayerArr: [],
-        nodeMachineNodeArr: [],
-        nodeArrowNodeArr: [],
+        roomUserList: [],    //房间内的别人ID信息
+        bGameStarted: false,    //身份分配好后开始游戏
+        nUpdateCounts: 0,          //update次数
+        arrPlayerInfo: [],          //房间的所有人的信息,包括玩家的Node节点信息
+        nodeWaitPlayerArr: [],      //等待玩家加入界面玩家节点数组
+        nodeMachineNodeArr: [],     //电机节点数组
+        nodeArrowNodeArr: [],       //电机位置预览数组
 
-        nStayInMachineTime: 0,
-        nMachineNum: 0,
-        nMonsterUserID: 0,
+        nStayInMachineTime: 0,      //靠近电机一共多长时间了
+        nMachineNum: 0,             //本局游戏应该有多少电机
+        nMonsterUserID: 0,          //猎人玩家ID
+        //X个人类位, 其中一个会变猎人
+        postionManArr: [
+            cc.v2(67 * 5, 148 * 5), cc.v2(383 * 5, 96 * 5),
+            cc.v2(-131 * 5, 185 * 5), cc.v2(192 * 5, 211 * 5),
+            cc.v2(-219 * 5, -157 * 5), cc.v2(-382 * 5, -117 * 5),
+            cc.v2(405 * 5, -74 * 5), cc.v2(-337 * 5, 162 * 5),],
+        //电机位置
+        postionMachineArr: [
+            cc.v2(0, -213 * 5),
+            cc.v2(0, 169 * 5),
+            cc.v2(-320 * 5, 0),
+            cc.v2(329 * 5, 0),
+            cc.v2(0, 0),
+        ],
     },
 
 
@@ -168,17 +181,24 @@ cc.Class({
 
         this.resourceUtils = this.node.getComponent("ResourceUtils");
 
+        //响应按钮回调
+        //分别可以匹配2,3,4,5人房间
+        //同时改变GameData.maxNumber属性和本局游戏应该有几个电机
         this.btnStartGame2.node.on("click", this.OnClickStartGame.bind(this, 2), this);
         this.btnStartGame3.node.on("click", this.OnClickStartGame.bind(this, 3), this);
         this.btnStartGame4.node.on("click", this.OnClickStartGame.bind(this, 4), this);
         this.btnStartGame5.node.on("click", this.OnClickStartGame.bind(this, 5), this);
+
         this.btnStartGameSingle.node.on("click", this.OnClickStartGameSingle, this);
         this.btnReLogin.node.on("click", this.OnClickRelogin, this);
         this.btnLoginOut.node.on("click", this.OnClickLoginOut, this);
 
+        //添加网络事件的监听和虚拟按键的监听
         this.AddEventListener();
+        //重置游戏为初始状态
         this.ResetGameUI();
 
+        //加载游戏内的prefab, 资源太小了,几乎一瞬间加载完,
         this.GetResourceUtils().LoadPrefab("nodePlayer", (res) =>
         {
             this.prefabPlayer = res;
@@ -234,6 +254,7 @@ cc.Class({
         node.on(cc.Node.EventType.TOUCH_CANCEL, this.OnCancelClickControlNode.bind(this, moveStatus), this);
     },
 
+    //游戏的公告label
     ShowLabelGame(strTips, callFunc)
     {
         this.labelGame.node.opacity = 255;
@@ -262,21 +283,24 @@ cc.Class({
         this.CancelOneStatus(moveStatus);
     },
 
+    //登录成功,显示开始游戏按钮
     OnLoginSuccess()
     {
         this.nodeBtn.active = true;
         this.btnReLogin.node.active = false;
     },
 
+    //登录失败,显示重新登录按钮
     OnLoginFail()
     {
         this.nodeBtn.active = false;
         this.btnReLogin.node.active = true;
     },
 
-    //自己进房间
+    //自己进入房间的回应
     OnSearchRoomResponse(roomInfo)
     {
+        //给等待其他玩家界面添加自己的信息
         let nodeWait1 = cc.instantiate(this.prefabWaitPlayer);
         this.nodeWaitUI.addChild(nodeWait1);
         nodeWait1.setPosition(-300, 0);
@@ -306,6 +330,7 @@ cc.Class({
     //等待其他人全部加入
     SetWaitingNodeShow()
     {
+        //遍历房间内其他玩家的信息,显示到等待界面上
         for(let i = 0; i < this.roomUserList.length; i++)
         {
             let info = this.roomUserList[i].userProfile;
@@ -324,11 +349,13 @@ cc.Class({
             labelName.string = strName;
         }
 
+        //所有人都已加入,移除等待界面的子节点,
         if (this.roomUserList && this.roomUserList.length === GameData.maxNumber - 1)
         {
             this.RemoveWaitUI();
             //根据ID大小,给房间玩家排序
             this.ResortArrPlayerInfo();
+            //开始投掷点数计算身份
             this.StartLoad();
         }
     },
@@ -538,6 +565,7 @@ cc.Class({
     //开始进入房间
     StartLoad()
     {
+        //时间戳加随机数,基本保证不会有人点数重合
         GameDefine.nMyPoint = new Date().getTime();
         GameDefine.nMyPoint = parseInt(GameDefine.nMyPoint) + GameDefine.GetRandNum(900000, 999999);
         cc.error("我的点数是nMyPoint= " + GameDefine.nMyPoint);
@@ -555,8 +583,11 @@ cc.Class({
 
     StartGame()
     {
+        //创建地形
         this.CreateRandomWall();
+        //创建电机,人数不同电机数量也不同
         this.CreateMachineArr();
+        //创建所有玩家的节点,并且初始化nodeMainPlayer属性
         this.CreatePlayerNode();
     },
 
@@ -566,6 +597,7 @@ cc.Class({
         this.nMonsterUserID = nMaxPointUserID;
         if(GameDefine.bIAmMonster)
         {
+            //初始化玩家的移动速度,猎人略快些
             this.fPerFrameSpeed = GameDefine.nMonsterMoveSpeed / cc.game.getFrameRate();
 
             for(let i in this.arrPlayerInfo)
@@ -605,6 +637,7 @@ cc.Class({
         //让玩家可以控制角色
         this.AddControlFunc();
 
+        //游戏开始, update运行
         this.bGameStarted = true;
     },
 
@@ -626,6 +659,7 @@ cc.Class({
         }
     },
 
+    //创建电机数组, nMachineNum是多少就显示多少
     CreateMachineArr()
     {
         if(this.nodeMachineNodeArr.length > 0)
@@ -670,8 +704,10 @@ cc.Class({
         }
     },
 
+    //创建地形,现在用的是mapWallData中的信息
     CreateRandomWall()
     {
+        //墙体数组关闭游戏不销毁,下局游戏直接改变active就行
         if(this.arrWallNode.length > 0)
         {
             for(let i in this.arrWallNode)
@@ -686,6 +722,7 @@ cc.Class({
         {
             let oneWall = cc.instantiate(this.prefabWall);
 
+            // 这个段可以随机生成墙体,存到arr数组中,遇到喜欢的地形就可以直接把arr的信息复制到mapWallData数据中
             // let nRandomX = GameDefine.GetRandNum(-2500, 2500);
             // let nRandomY = GameDefine.GetRandNum(-1200, 1200);
             // let bLegel = (nRandomX<-100 || nRandomX>100) && (nRandomY<-100 || nRandomY>100);
@@ -718,6 +755,7 @@ cc.Class({
         // cc.log("ppppppppp===>" + JSON.stringify(arr));
     },
 
+    //pc端按键控制WASD
     AddControlFunc()
     {
         this.nodeControl.active = true;
@@ -763,6 +801,7 @@ cc.Class({
         }
     },
 
+    //设置移动状态,并存下上次的移动状态
     SetMainPlayerMoveStatus(status)
     {
         if (this.arrPlayerMoveStatus.indexOf(status) != -1)
@@ -774,6 +813,7 @@ cc.Class({
         this.arrPlayerMoveStatus.push(status);
     },
 
+    //按键弹起,取消弹起的移动状态
     CancelOneStatus(status)
     {
         if (this.arrPlayerMoveStatus.indexOf(status) != -1)
@@ -834,6 +874,7 @@ cc.Class({
         }
 
         this.UpdateCameraPosition();
+
         if(this.bGameStarted)
         {
             //60%2, 每秒30次校验位置
@@ -848,11 +889,14 @@ cc.Class({
                 engine.prototype.sendEvent(JSON.stringify(strData));
             }
 
+            //抓到人了没?
             this.CheckIsCatched();
+            //是不是在修理电机
             this.CheckIsFixMachine();
         }
     },
 
+    //摄像机跟踪主玩家位置
     UpdateCameraPosition()
     {
         if(this.nodeBackUI.scaleX !== 1)
@@ -929,6 +973,7 @@ cc.Class({
         }
     },
 
+    //修理电机
     CheckIsFixMachine()
     {
         let myPos = this.nodeMainPlayer.getPosition();
@@ -1039,6 +1084,7 @@ cc.Class({
         this.arrPlayerInfo.push(onePlayer);
     },
 
+    //根据ID返回房间玩家的属性
     GetPlayerNodeByUserID(nUserID)
     {
         for(let i in this.arrPlayerInfo)
