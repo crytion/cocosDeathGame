@@ -406,8 +406,10 @@ cc.Class({
                     //人来齐了,开始计算谁当g
                     if (GameDefine.objOtherPoint.length === GameData.maxNumber - 1)
                     {
-                        //默认都是自己g
+                        //默认都是自己猎人
                         GameDefine.bIAmMonster = true;
+                        nMaxPointUserID = GameData.userID;
+
                         for (let i in GameDefine.objOtherPoint)
                         {
                             let oneInfo = GameDefine.objOtherPoint[i];

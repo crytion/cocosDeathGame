@@ -71,6 +71,10 @@ cc.Class({
             type: cc.Label,
             default: null
         },
+        labelTooClose: {
+            type: cc.Label,
+            default: null
+        },
         nodeResult: {
             type: cc.Node,
             default: null
@@ -96,7 +100,7 @@ cc.Class({
         //当前的状态
         arrPlayerMoveStatus: [],
         resourceUtils: null,
-        fSin45: 0.8509, //sin45度
+        fSin45: 0.707, //sin45度
         roomUserList: [],
         bGameStarted: false,
         nUpdateCounts: 0,
@@ -107,12 +111,14 @@ cc.Class({
 
         nStayInMachineTime: 0,
         nMachineNum: 0,
+        nMonsterUserID: 0,
     },
 
 
     //将游戏重置为登录状态
     ResetGameUI()
     {
+        this.nMonsterUserID = 0;
         this.nMachineNum = 0;
         this.fPerFrameSpeed = 0;
         this.nUpdateCounts = 0;
@@ -133,6 +139,7 @@ cc.Class({
         GameDefine.objOtherPoint = [];
         GameDefine.nGameType = 0;
         this.labelGame.string = "";
+        this.labelTooClose.node.active = false;
         this.mainCamera.node.setPosition(cc.v2(0,0));
         this.nodeMask.setPosition(cc.v2(0,0));
         //X个人类位, 其中一个会变猎人
@@ -385,7 +392,7 @@ cc.Class({
         this.SavePushPlayerInfo(onePlayer);
 
         this.StartGame();
-        this.OnGamePlayerAllotOver(null);
+        this.OnGamePlayerAllotOver(GameData.userID);
     },
 
     OnClickRelogin()
@@ -556,6 +563,7 @@ cc.Class({
     //角色分配成功
     OnGamePlayerAllotOver(nMaxPointUserID)
     {
+        this.nMonsterUserID = nMaxPointUserID;
         if(GameDefine.bIAmMonster)
         {
             this.fPerFrameSpeed = GameDefine.nMonsterMoveSpeed / cc.game.getFrameRate();
@@ -570,11 +578,8 @@ cc.Class({
                 this.postionManArr.splice(nRandomIndex, 1);
             }
 
-            // this.nodeMainPlayer.setPosition(this.postionMonster);
             this.nodeMainPlayer.getChildByName("labelName").getComponent(cc.Label).string = "猎人";
-
             // this.nodeMask.active = true;
-
             this.ShowLabelGame("请寻找躲起来的猎物!");
         }
         else
@@ -592,7 +597,6 @@ cc.Class({
             }
 
             let monsterInfo = this.GetPlayerNodeByUserID(nMaxPointUserID);
-            // monsterInfo.playerNode.setPosition(this.postionMonster);
             monsterInfo.playerNode.getChildByName("labelName").getComponent(cc.Label).string = "猎人";
 
             this.ShowLabelGame("猎人来了,破坏"+ (this.nMachineNum-1) +"个电机逃脱!");
@@ -626,7 +630,7 @@ cc.Class({
     {
         if(this.nodeMachineNodeArr.length > 0)
         {
-            for(let i=3; i<this.nMachineNum;i++)
+            for (let i = 0; i < this.nMachineNum; i++)
             {
                 this.nodeMachineNodeArr[i].active = true;
                 this.nodeArrowNodeArr[i].active = true;
@@ -639,6 +643,7 @@ cc.Class({
             let oneMachineNode = cc.instantiate(this.prefabMachine);
             this.nodeMachineNodeArr.push(oneMachineNode);
             this.nodeGameParent.addChild(oneMachineNode);
+            oneMachineNode.active = false;
 
             let oneArrow = cc.instantiate(this.prefabArrow);
             this.nodeArrowNodeArr.push(oneArrow);
@@ -652,6 +657,16 @@ cc.Class({
             oneMachineNode.getComponent(MachineControl).SetMachineID(i);
             //重置维修进度
             oneMachineNode.getComponent(MachineControl).SetProgress(0);
+        }
+
+        if(this.nodeMachineNodeArr.length > 0)
+        {
+            for (let i = 0; i < this.nMachineNum; i++)
+            {
+                this.nodeMachineNodeArr[i].active = true;
+                this.nodeArrowNodeArr[i].active = true;
+            }
+            return;
         }
     },
 
@@ -812,18 +827,6 @@ cc.Class({
                     break;
 
             }
-
-            //60%3, 每秒20次校验位置
-            if(this.bGameStarted && this.nUpdateCounts % 2 === 0)
-            {
-                let strData = {
-                    "msgType": MsgType.msgPlayerMove,
-                    "nMyUserID": GameData.userID,
-                    "posx": this.nodeMainPlayer.getPosition().x,
-                    "posy": this.nodeMainPlayer.getPosition().y
-                };
-                engine.prototype.sendEvent(JSON.stringify(strData));
-            }
         }
         else
         {
@@ -833,6 +836,18 @@ cc.Class({
         this.UpdateCameraPosition();
         if(this.bGameStarted)
         {
+            //60%2, 每秒30次校验位置
+            if(this.nUpdateCounts % 2 === 0)
+            {
+                let strData = {
+                    "msgType": MsgType.msgPlayerMove,
+                    "nMyUserID": GameData.userID,
+                    "posx": this.nodeMainPlayer.getPosition().x,
+                    "posy": this.nodeMainPlayer.getPosition().y
+                };
+                engine.prototype.sendEvent(JSON.stringify(strData));
+            }
+
             this.CheckIsCatched();
             this.CheckIsFixMachine();
         }
@@ -842,6 +857,7 @@ cc.Class({
     {
         if(this.nodeBackUI.scaleX !== 1)
         {
+            //正在全局预览地图,摄像机可以歇歇了
             return;
         }
         if(this.nodeMainPlayer)
@@ -855,6 +871,7 @@ cc.Class({
     //游戏开始后检测自己有没有抓到人,只需要g判定就行
     CheckIsCatched()
     {
+        //猎人抓人
         if(GameDefine.bIAmMonster)
         {
             let myPos = this.nodeMainPlayer.getPosition();
@@ -892,6 +909,22 @@ cc.Class({
                         }
                     }
                 }
+            }
+        }
+        //猎人靠近需要警告猎物
+        else
+        {
+            let myPos = this.nodeMainPlayer.getPosition();
+            let monsterInfo = this.GetPlayerNodeByUserID(this.nMonsterUserID);
+            let monsterPos = monsterInfo.playerNode.getPosition();
+            let nDistance = myPos.sub(monsterPos).mag();
+            if(nDistance <= 600)
+            {
+                this.labelTooClose.node.active = true;
+            }
+            else
+            {
+                this.labelTooClose.node.active = false;
             }
         }
     },
