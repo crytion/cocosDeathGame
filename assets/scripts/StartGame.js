@@ -106,13 +106,14 @@ cc.Class({
         nodeArrowNodeArr: [],
 
         nStayInMachineTime: 0,
-        nMachineNum: 3,
+        nMachineNum: 0,
     },
 
 
     //将游戏重置为登录状态
     ResetGameUI()
     {
+        this.nMachineNum = 0;
         this.fPerFrameSpeed = 0;
         this.nUpdateCounts = 0;
         this.nStayInMachineTime = 0;
@@ -369,6 +370,7 @@ cc.Class({
 
     OnClickStartGameSingle()
     {
+        this.nMachineNum = 4;
         GameDefine.nGameType = 0;
         GameDefine.bIAmMonster = true;
         this.nodeStartUI.active = false;
@@ -624,18 +626,15 @@ cc.Class({
     {
         if(this.nodeMachineNodeArr.length > 0)
         {
-            for(let i in this.nodeMachineNodeArr)
+            for(let i=3; i<this.nMachineNum;i++)
             {
                 this.nodeMachineNodeArr[i].active = true;
-            }
-            for(let i in this.nodeArrowNodeArr)
-            {
                 this.nodeArrowNodeArr[i].active = true;
             }
             return;
         }
 
-        for (let i = 0; i < this.nMachineNum; i++)
+        for (let i = 0; i < 4; i++)
         {
             let oneMachineNode = cc.instantiate(this.prefabMachine);
             this.nodeMachineNodeArr.push(oneMachineNode);
@@ -908,7 +907,7 @@ cc.Class({
             {
                 let oneMachine = this.nodeMachineNodeArr[i];
                 let nCurrentProgress = oneMachine.getComponent(MachineControl).GetProgress();
-                if(nCurrentProgress < 100)
+                if(nCurrentProgress < 100 && oneMachine.active)
                 {
                     let posMachine = oneMachine.getPosition();
                     let nDistance = myPos.sub(posMachine).mag();
@@ -937,6 +936,10 @@ cc.Class({
         for(let i =0;i< this.nodeMachineNodeArr.length;i++)
         {
             let oneMachine = this.nodeMachineNodeArr[i];
+            if(!oneMachine.active)
+            {
+                continue;
+            }
             let posMachine = oneMachine.getPosition();
             let nDistance = myPos.sub(posMachine).mag();
 
