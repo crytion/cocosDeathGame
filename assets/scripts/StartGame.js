@@ -358,8 +358,7 @@ cc.Class({
         //遍历房间内其他玩家的信息,显示到等待界面上
         for(let i = 0; i < this.roomUserList.length; i++)
         {
-            let info = this.roomUserList[i].userProfile;
-            let strName = info.name;
+            let strName = this.roomUserList[i].userProfile;
             let strID = this.roomUserList[i].userID;
             let onePlayer = new OnePlayerInfo(strID, strName);
             this.SavePushPlayerInfo(onePlayer);
@@ -692,6 +691,7 @@ cc.Class({
             for (let i = 0; i < this.nMachineNum; i++)
             {
                 this.nodeMachineNodeArr[i].active = true;
+                this.nodeMachineNodeArr[i].getComponent(MachineControl).SetProgress(0);
                 this.nodeArrowNodeArr[i].active = true;
             }
             return;
@@ -723,9 +723,9 @@ cc.Class({
             for (let i = 0; i < this.nMachineNum; i++)
             {
                 this.nodeMachineNodeArr[i].active = true;
+                this.nodeMachineNodeArr[i].getComponent(MachineControl).SetProgress(0);
                 this.nodeArrowNodeArr[i].active = true;
             }
-            return;
         }
     },
 

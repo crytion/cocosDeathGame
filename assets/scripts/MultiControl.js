@@ -117,7 +117,7 @@ cc.Class({
      */
     init()
     {
-        var result = engine.prototype.init(GameData.channel, GameData.platform, GameData.gameID, GameData.appKey);
+        let result = engine.prototype.init(GameData.channel, GameData.platform, GameData.gameID, GameData.appKey);
         // cc.log('初始化使用的gameID是:' + GameData.gameID, '如需更换为自己SDK，请修改ExamplesData.js文件');
         this.engineCode(result, 'init');
     },
@@ -127,7 +127,7 @@ cc.Class({
      */
     register()
     {
-        var result = engine.prototype.registerUser();
+        let result = engine.prototype.registerUser();
         this.engineCode(result, 'registerUser');
     },
 
@@ -136,7 +136,7 @@ cc.Class({
      */
     login()
     {
-        var result = engine.prototype.login(GameData.userID, GameData.token);
+        let result = engine.prototype.login(GameData.userID, GameData.token);
         cc.log('登录的账号userID是:', GameData.userID);
         if (result == -6)
         {
@@ -160,7 +160,7 @@ cc.Class({
     {
         if (this.bLoginSuccess)
         {
-            var result = engine.prototype.joinRandomRoom(GameData.maxNumber);
+            let result = engine.prototype.joinRandomRoom(GameData.maxNumber);
             this.engineCode(result, 'joinRandomRoom');
         }
         else
@@ -175,7 +175,7 @@ cc.Class({
      */
     joinOver()
     {
-        var result = engine.prototype.joinOver();
+        let result = engine.prototype.joinOver();
         this.engineCode(result, 'joinOver');
     },
 
@@ -186,7 +186,7 @@ cc.Class({
     {
         if (this.bRoomInitedOver)
         {
-            // var result = engine.prototype.sendEvent("");
+            // let result = engine.prototype.sendEvent("");
             // this.engineCode(result, 'sendEvent');
         }
         else
@@ -202,7 +202,7 @@ cc.Class({
      */
     leaveRoom()
     {
-        var result = engine.prototype.leaveRoom();
+        let result = engine.prototype.leaveRoom();
         this.engineCode(result, 'leaveRoom');
     },
 
@@ -211,7 +211,7 @@ cc.Class({
      */
     logout()
     {
-        var result = engine.prototype.logout();
+        let result = engine.prototype.logout();
         this.engineCode(result, 'logout');
     },
 
@@ -220,7 +220,7 @@ cc.Class({
      */
     unInit()
     {
-        var result = engine.prototype.unInit();
+        let result = engine.prototype.unInit();
         this.engineCode(result, 'unInit');
     },
 
@@ -324,7 +324,7 @@ cc.Class({
      */
     joinRoomNotify(roomUserInfo)
     {
-        cc.log('joinRoomNotify：加入房间的玩家ID是' + roomUserInfo.userID);
+        cc.log('joinRoomNotify_加入房间的玩家ID是' + roomUserInfo.userID, "     roomUserInfo==" + JSON.stringify(roomUserInfo));
 
         cc.systemEvent.emit(CrtEventType.MainPlayerJoinRoomResponse, {roomUserInfo : roomUserInfo});
     },

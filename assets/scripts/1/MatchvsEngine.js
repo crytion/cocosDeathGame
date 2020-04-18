@@ -57,7 +57,7 @@ NetWorkEngine.prototype.login = function(userID,token){
  * @returns {number}
  */
 NetWorkEngine.prototype.joinRandomRoom = function(maxNumber){
-    var result = mvs.engine.joinRandomRoom(maxNumber,gameData.userName+'进入了房间');
+    var result = mvs.engine.joinRandomRoom(maxNumber, gameData.userName);
     console.log("随机匹配result"+result);
     return result;
 };

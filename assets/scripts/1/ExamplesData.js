@@ -13,8 +13,6 @@ var GameData = {
     maxNumber: 2,
     userID: "",
     token: "",
-    host: "",
-    isPAAS: false,
     reset: function () {
         GameData.gameID = "";
         GameData.appKey = "";
