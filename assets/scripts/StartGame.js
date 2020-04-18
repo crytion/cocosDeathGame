@@ -126,6 +126,7 @@ cc.Class({
         this.bGameStarted = false;
         this.bCanMove = false;
         this.nodeBtn.active = false;
+        this.nodeStartUI.active = true;
         this.btnReLogin.node.active = false;
         this.nodeWaitUI.active = false;
         this.nodeControl.active = false;
