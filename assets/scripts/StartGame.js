@@ -75,6 +75,10 @@ cc.Class({
             type: cc.Label,
             default: null
         },
+        labelCountDown: {
+            type: cc.Label,
+            default: null
+        },
         nodeResult: {
             type: cc.Node,
             default: null
@@ -112,12 +116,15 @@ cc.Class({
         nMonsterUserID: 0,          //猎人玩家ID
         postionManArr: [],//X个人类位, 其中一个会变猎人
         postionMachineArr: [], //电机位置
+
+        nCountDownTime: 285, //整个游戏的倒计时,计时结束就算猎物逃不了,4分44秒
     },
 
 
     //将游戏重置为登录状态
     ResetGameUI()
     {
+        this.nCountDownTime = 285;
         this.nMonsterUserID = 0;
         this.nMachineNum = 0;
         this.fPerFrameSpeed = 0;
@@ -132,6 +139,7 @@ cc.Class({
         this.nodeControl.active = false;
         this.nodeResult.active = false;
         this.nodeMask.active = false;
+        this.labelCountDown.node.active = false;
         this.arrPlayerMoveStatus = [];
         this.arrPlayerInfo = [];
         this.nodeWaitPlayerArr = [];
@@ -664,6 +672,7 @@ cc.Class({
 
         //游戏开始, update运行
         this.bGameStarted = true;
+        this.labelCountDown.node.active = true;
     },
 
     CreatePlayerNode()
@@ -952,6 +961,22 @@ cc.Class({
             this.CheckIsCatched();
             //是不是在修理电机
             this.CheckIsFixMachine();
+
+            this.UpdateCountDownTime(fDt);
+        }
+    },
+
+    //开始倒计时,计时结束,猎物全部死亡
+    UpdateCountDownTime(fDt)
+    {
+        this.nCountDownTime -= fDt;
+        let nMin = parseInt(this.nCountDownTime/60);
+        let nSce = parseInt(this.nCountDownTime%60);
+
+        this.labelCountDown.string = nMin+":"+nSce+"后\n猎物全部中毒死亡!";
+        if(this.nCountDownTime <= 0)
+        {
+            this.GameOver();
         }
     },
 
@@ -1107,18 +1132,22 @@ cc.Class({
 
         if(nTotalFixedCount == (this.nMachineNum-1))
         {
-            if(!GameDefine.bIAmMonster)
-            {
-                this.ShowLabelGame("猎物逃脱!你赢了", this.OnClickLoginOut.bind(this));
-            }
-            else
-            {
-                this.ShowLabelGame("猎物逃脱!你输了", this.OnClickLoginOut.bind(this));
-            }
-            this.bGameStarted = false;
+            this.GameOver();
         }
     },
 
+    GameOver()
+    {
+        if(!GameDefine.bIAmMonster)
+        {
+            this.ShowLabelGame("猎物逃脱!你赢了", this.OnClickLoginOut.bind(this));
+        }
+        else
+        {
+            this.ShowLabelGame("猎物逃脱!你输了", this.OnClickLoginOut.bind(this));
+        }
+        this.bGameStarted = false;
+    },
 
 
     GetResourceUtils()
