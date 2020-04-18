@@ -254,6 +254,21 @@ cc.Class({
         this.SetNodeControl(nodeDown, MoveStatus.Status_DOWN);
         this.SetNodeControl(nodeLeft, MoveStatus.Status_LEFT);
         this.SetNodeControl(nodeRight, MoveStatus.Status_RIGHT);
+    },
+
+    RemoveAllEvent()
+    {
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.OnKeyDown, this);
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.OnKeyUp, this);
+        cc.systemEvent.off(CrtEventType.MainPlayerLoginSucc, this.OnLoginSuccess, this);
+        cc.systemEvent.off(CrtEventType.MainPlayerLoginFail, this.OnLoginFail, this);
+        cc.systemEvent.off(CrtEventType.MainPlayerSearchRoomResponse, this.OnSearchRoomResponse, this);
+        cc.systemEvent.off(CrtEventType.MainPlayerJoinRoomResponse, this.OnJoinRoomResponse, this);
+        cc.systemEvent.off(CrtEventType.GamePlayerAllotOver, this.OnGamePlayerAllotOver, this);
+        cc.systemEvent.off(CrtEventType.GamePlayerUpdatePosition, this.OnOtherPlayerMove, this);
+        cc.systemEvent.off(CrtEventType.PlayerLeaveRoomNotify, this.HandleOnePlayerLeave, this);
+        cc.systemEvent.off(CrtEventType.PlayerCatchedNotify, this.OnOtherPlayerCatched, this);
+        cc.systemEvent.off(CrtEventType.PlayerFixedNotify, this.OnOtherMachineFixed, this);
 
     },
 
@@ -821,15 +836,52 @@ cc.Class({
         }
         this.bCanMove = true;
         this.arrPlayerMoveStatus.push(status);
+
+        //斜面移动,4种
+        //同时点击三个按键就不管了
+        if(this.arrPlayerMoveStatus.length === 2)
+        {
+            let nLastStatus1 = this.arrPlayerMoveStatus[this.arrPlayerMoveStatus.length - 1];
+            let nLastStatus2 = this.arrPlayerMoveStatus[this.arrPlayerMoveStatus.length - 2];
+
+            if(nLastStatus1 === MoveStatus.Status_UP || nLastStatus2===MoveStatus.Status_UP)
+            {
+                if(nLastStatus1 === MoveStatus.Status_LEFT || nLastStatus2 === MoveStatus.Status_LEFT)
+                {
+                    this.arrPlayerMoveStatus.push(MoveStatus.Status_UP_LEFT);
+                }
+                else if(nLastStatus1 === MoveStatus.Status_RIGHT || nLastStatus2 === MoveStatus.Status_RIGHT)
+                {
+                    this.arrPlayerMoveStatus.push(MoveStatus.Status_UP_RIGHT);
+                }
+            }
+            else if(nLastStatus1 === MoveStatus.Status_DOWN || nLastStatus2===MoveStatus.Status_DOWN)
+            {
+                if(nLastStatus1 === MoveStatus.Status_LEFT || nLastStatus2 === MoveStatus.Status_LEFT)
+                {
+                    this.arrPlayerMoveStatus.push(MoveStatus.Status_DOWN_LEFT);
+                }
+                else if(nLastStatus1 === MoveStatus.Status_RIGHT || nLastStatus2 === MoveStatus.Status_RIGHT)
+                {
+                    this.arrPlayerMoveStatus.push(MoveStatus.Status_DOWN_RIGHT);
+                }
+            }
+
+        }
     },
 
     //按键弹起,取消弹起的移动状态
     CancelOneStatus(status)
     {
-        if (this.arrPlayerMoveStatus.indexOf(status) != -1)
+        if (this.arrPlayerMoveStatus.indexOf(status) !== -1)
         {
             let nIndex = this.arrPlayerMoveStatus.indexOf(status);
             this.arrPlayerMoveStatus.splice(nIndex, 1);
+        }
+        let nLastIndex = this.arrPlayerMoveStatus.length - 1;
+        if(this.arrPlayerMoveStatus[nLastIndex] >= MoveStatus.Status_UP_LEFT)
+        {
+            this.arrPlayerMoveStatus.splice(nLastIndex, 1);
         }
 
         if (this.arrPlayerMoveStatus.length <= 0)
@@ -1129,18 +1181,7 @@ cc.Class({
 
     onDestroy()
     {
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.OnKeyDown, this);
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.OnKeyUp, this);
-        cc.systemEvent.off(CrtEventType.MainPlayerLoginSucc, this.OnLoginSuccess, this);
-        cc.systemEvent.off(CrtEventType.MainPlayerLoginFail, this.OnLoginFail, this);
-        cc.systemEvent.off(CrtEventType.MainPlayerSearchRoomResponse, this.OnSearchRoomResponse, this);
-        cc.systemEvent.off(CrtEventType.MainPlayerJoinRoomResponse, this.OnJoinRoomResponse, this);
-        cc.systemEvent.off(CrtEventType.GamePlayerAllotOver, this.OnGamePlayerAllotOver, this);
-        cc.systemEvent.off(CrtEventType.GamePlayerUpdatePosition, this.OnOtherPlayerMove, this);
-        cc.systemEvent.off(CrtEventType.PlayerLeaveRoomNotify, this.HandleOnePlayerLeave, this);
-        cc.systemEvent.off(CrtEventType.PlayerCatchedNotify, this.OnOtherPlayerCatched, this);
-        cc.systemEvent.off(CrtEventType.PlayerFixedNotify, this.OnOtherMachineFixed, this);
-
+        this.RemoveAllEvent();
         this.GetResourceUtils().ReleasePrefab("nodePlayer");
         this.GetResourceUtils().ReleasePrefab("nodeWall");
     },
