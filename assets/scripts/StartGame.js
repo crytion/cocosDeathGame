@@ -429,7 +429,7 @@ cc.Class({
 
     OnClickStartGameSingle()
     {
-        this.nMachineNum = 4;
+        this.nMachineNum = 5;
         GameDefine.nGameType = 0;
         GameDefine.bIAmMonster = true;
         this.nodeStartUI.active = false;
@@ -698,21 +698,17 @@ cc.Class({
             return;
         }
 
-        for (let i = 0; i < 4; i++)
+        for (let i = 0; i < 5; i++)
         {
             let oneMachineNode = cc.instantiate(this.prefabMachine);
             this.nodeMachineNodeArr.push(oneMachineNode);
             this.nodeGameParent.addChild(oneMachineNode);
             oneMachineNode.active = false;
-
             let oneArrow = cc.instantiate(this.prefabArrow);
             this.nodeArrowNodeArr.push(oneArrow);
             oneArrow.active = false;
             this.nodeGameParent.addChild(oneArrow, 99);
-
-
             oneMachineNode.setPosition(this.postionMachineArr[i]);
-
             //设置机器ID
             oneMachineNode.getComponent(MachineControl).SetMachineID(i);
             //重置维修进度
