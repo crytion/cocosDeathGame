@@ -130,6 +130,7 @@ cc.Class({
         this.nodeWaitUI.active = false;
         this.nodeControl.active = false;
         this.nodeResult.active = false;
+        this.nodeMask.active = false;
         this.arrPlayerMoveStatus = [];
         this.arrPlayerInfo = [];
         this.nodeWaitPlayerArr = [];
@@ -205,8 +206,30 @@ cc.Class({
         this.GetResourceUtils().LoadPrefab("nodeArrow", (res) =>
         {
             this.prefabArrow = res;
-        })
+        });
+
+
+        let nGameWidth = cc.view.getFrameSize().width;
+        let nGameHeight = cc.view.getFrameSize().height;
+
+        let fScaleX = 0;
+        let fScaleY = 0;
+        if(nGameWidth <= 1000)
+        {
+            fScaleX = 1000/nGameWidth;
+            fScaleY = 500/nGameHeight;
+        }
+        else
+        {
+            fScaleX = nGameWidth/1000;
+            fScaleY = nGameHeight/500;
+        }
+
+        this.nodeMask.setScale(fScaleX, fScaleY);
     },
+
+
+
 
     AddEventListener()
     {
@@ -598,7 +621,7 @@ cc.Class({
             }
 
             this.nodeMainPlayer.getChildByName("labelName").getComponent(cc.Label).string = "猎人";
-            // this.nodeMask.active = true;
+            this.nodeMask.active = true;
             this.ShowLabelGame("请寻找躲起来的猎物!");
         }
         else
