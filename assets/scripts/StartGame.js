@@ -195,6 +195,8 @@ cc.Class({
         //重置游戏为初始状态
         this.ResetGameUI();
 
+        this.ResizeMaskSize();
+
         //加载游戏内的prefab, 资源太小了,几乎一瞬间加载完,
         this.GetResourceUtils().LoadPrefab("nodePlayer", (res) =>
         {
@@ -218,26 +220,31 @@ cc.Class({
         });
 
 
-        let nGameWidth = cc.view.getFrameSize().width;
-        let nGameHeight = cc.view.getFrameSize().height;
-
-        let fScaleX = 0;
-        let fScaleY = 0;
-        if(nGameWidth <= 1000)
-        {
-            fScaleX = 1000/nGameWidth;
-            fScaleY = 500/nGameHeight;
-        }
-        else
-        {
-            fScaleX = nGameWidth/1000;
-            fScaleY = nGameHeight/500;
-        }
-
-        this.nodeMask.setScale(fScaleX, fScaleY);
     },
 
+    ResizeMaskSize()
+    {
+        let fFrameWidth_Height = cc.view.getFrameSize().width / cc.view.getFrameSize().height;
+        let fScaleViewOffRateX = 1;
+        let fScaleViewOffRateY = 1;
 
+        //当手机分辨率大于 2比1, 会导致横轴有黑边
+        //横轴有黑边,先拉伸横轴,让屏幕铺满
+        if(fFrameWidth_Height > 2)
+        {
+            fScaleViewOffRateX = fFrameWidth_Height/2;
+            fScaleViewOffRateY = 1;
+        }
+        //纵轴有黑边的话
+        //纵轴有黑边,先拉伸纵轴,让屏幕铺满
+        else
+        {
+            fScaleViewOffRateX = 1;
+            fScaleViewOffRateY = (1/fFrameWidth_Height) / 0.5;
+        }
+
+        this.nodeMask.setScale(fScaleViewOffRateX, fScaleViewOffRateY);
+    },
 
 
     AddEventListener()
