@@ -1,0 +1,10 @@
+{
+    "name": "ccservices-agora-preview-script",
+    "version": "1.0.0",
+    "description": "Load external script in web preview",
+    "author": "Jare",
+    "main": "main.js",
+    "hosts": {
+        "CocosCreator": ">=1.4.0-beta.9"
+    }
+}

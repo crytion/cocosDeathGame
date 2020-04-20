@@ -118,6 +118,12 @@ cc.Class({
         postionMachineArr: [], //电机位置
 
         nCountDownTime: 285, //整个游戏的倒计时,计时结束就算猎物逃不了,4分44秒
+
+        nodeMyVoice:null,
+        nodeOtherVoice:null,
+
+        labelMyVoice:null,
+        labelOtherVoice:null,
     },
 
 
@@ -166,6 +172,12 @@ cc.Class({
             cc.v2(0, 0),
         ];
 
+        //重置语音聊天的数据
+        this.labelMyVoice.string = "关闭麦克风";
+        this.labelOtherVoice.string = "静音别人";
+        AgoraDefine.bMyVoiceOpened = true;
+        AgoraDefine.bOtherVoiceOpened = true;
+
     },
 
     onLoad()
@@ -190,12 +202,23 @@ cc.Class({
         this.btnReLogin.node.on("click", this.OnClickRelogin, this);
         this.btnLoginOut.node.on("click", this.OnClickLoginOut, this);
 
+
+        this.nodeMyVoice = this.nodeControl.getChildByName("btnMyVoice");
+        this.nodeOtherVoice = this.nodeControl.getChildByName("btnOtherVoice");
+
+        this.labelMyVoice = this.nodeMyVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+        this.labelOtherVoice = this.nodeOtherVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+
+
         //添加网络事件的监听和虚拟按键的监听
         this.AddEventListener();
         //重置游戏为初始状态
         this.ResetGameUI();
 
         this.ResizeMaskSize();
+
+        AgoraManager.AddAgoraListener();
+        AgoraManager.InitAgora();
 
         //加载游戏内的prefab, 资源太小了,几乎一瞬间加载完,
         this.GetResourceUtils().LoadPrefab("nodePlayer", (res) =>
@@ -218,8 +241,6 @@ cc.Class({
         {
             this.prefabArrow = res;
         });
-
-
     },
 
     ResizeMaskSize()
@@ -270,6 +291,9 @@ cc.Class({
         this.SetNodeControl(nodeDown, MoveStatus.Status_DOWN);
         this.SetNodeControl(nodeLeft, MoveStatus.Status_LEFT);
         this.SetNodeControl(nodeRight, MoveStatus.Status_RIGHT);
+
+        this.nodeMyVoice.on("click", this.OnClickMyVoice, this);
+        this.nodeOtherVoice.on("click", this.OnClickOtherVoice, this);
     },
 
     RemoveAllEvent()
@@ -312,6 +336,38 @@ cc.Class({
                 }
             })
             .start();
+    },
+
+    OnClickMyVoice()
+    {
+        if (AgoraDefine.bMyVoiceOpened)
+        {
+            AgoraManager.CloseMyVoice();
+            this.labelMyVoice.string = "开启麦克风";
+        }
+        else
+        {
+            AgoraManager.OpenMyVoice();
+            this.labelMyVoice.string = "关闭麦克风";
+        }
+        AgoraDefine.bMyVoiceOpened = !AgoraDefine.bMyVoiceOpened;
+    },
+
+    OnClickOtherVoice()
+    {
+        if (AgoraDefine.bOtherVoiceOpened)
+        {
+            AgoraManager.CloseAgoraVoice();
+            this.labelOtherVoice.string = "听别人";
+
+        }
+        else
+        {
+            AgoraManager.OpenAgoraVoice();
+            this.labelOtherVoice.string = "静音别人";
+        }
+
+        AgoraDefine.bOtherVoiceOpened = !AgoraDefine.bOtherVoiceOpened;
     },
 
     OnClickControlNode(moveStatus)
@@ -357,6 +413,9 @@ cc.Class({
         this.roomUserList = roomInfo.userInfoList;        //除了自己的其他人
         this.SetWaitingNodeShow();
 
+
+        let nMainRoomID = roomInfo.nMainRoomID;
+        AgoraManager.AddOneAgoraChannel(nMainRoomID+"");
     },
 
     //别人进房间
@@ -504,6 +563,8 @@ cc.Class({
         if(GameDefine.nGameType == 1)
         {
             engine.prototype.leaveRoom();
+
+            AgoraManager.LeaveAgoraRoom();
         }
         else
         {

@@ -14,7 +14,7 @@
 				},
 				{
 					"service_id": "242",
-					"enable": false
+					"enable": true
 				}
 			]
 		}

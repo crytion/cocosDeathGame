@@ -277,8 +277,8 @@ cc.Class({
         {
             this.bLoginSuccess = true;
             this.ShowLabelLog("用户登录成功");
-
             cc.systemEvent.emit(CrtEventType.MainPlayerLoginSucc, "登录成功");
+            // this.leaveRoom();
             return;
         } else if (MsLoginRsp.status == 402)
         {
