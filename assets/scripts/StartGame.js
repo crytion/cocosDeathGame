@@ -79,18 +79,6 @@ cc.Class({
             type: cc.Label,
             default: null
         },
-        nodeResult: {
-            type: cc.Node,
-            default: null
-        },
-        labelWinTips: {
-            type: cc.Label,
-            default: null
-        },
-        btnReturnLobby: {
-            type: cc.Button,
-            default: null
-        },
 
         prefabPlayer: null,
         prefabWall: null,
@@ -143,7 +131,6 @@ cc.Class({
         this.btnReLogin.node.active = false;
         this.nodeWaitUI.active = false;
         this.nodeControl.active = false;
-        this.nodeResult.active = false;
         this.nodeMask.active = false;
         this.labelCountDown.node.active = false;
         this.arrPlayerMoveStatus = [];
@@ -172,6 +159,7 @@ cc.Class({
             cc.v2(0, 0),
         ];
 
+        this.ShowHelpNode();
         //重置语音聊天的数据
         this.labelMyVoice.string = "关闭麦克风";
         this.labelOtherVoice.string = "静音别人";
@@ -241,6 +229,13 @@ cc.Class({
         {
             this.prefabArrow = res;
         });
+
+        this.GetResourceUtils().LoadPrefab("nodeHelp", (res) =>
+        {
+            this.nodeHelp = cc.instantiate(res);
+            this.nodeGameParent.addChild(this.nodeHelp);
+        });
+
     },
 
     ResizeMaskSize()
@@ -270,7 +265,6 @@ cc.Class({
 
     AddEventListener()
     {
-
         cc.systemEvent.on(CrtEventType.MainPlayerLoginSucc, this.OnLoginSuccess, this);
         cc.systemEvent.on(CrtEventType.MainPlayerLoginFail, this.OnLoginFail, this);
         cc.systemEvent.on(CrtEventType.MainPlayerSearchRoomResponse, this.OnSearchRoomResponse, this);
@@ -310,6 +304,22 @@ cc.Class({
         cc.systemEvent.off(CrtEventType.PlayerCatchedNotify, this.OnOtherPlayerCatched, this);
         cc.systemEvent.off(CrtEventType.PlayerFixedNotify, this.OnOtherMachineFixed, this);
 
+    },
+
+    HideHelpNode()
+    {
+        if (this.nodeHelp)
+        {
+            this.nodeHelp.active = false;
+        }
+    },
+
+    ShowHelpNode()
+    {
+        if (this.nodeHelp)
+        {
+            this.nodeHelp.active = true;
+        }
     },
 
     SetNodeControl(node, moveStatus)
@@ -489,6 +499,8 @@ cc.Class({
 
     OnClickStartGame(nPlayerNum)
     {
+        this.HideHelpNode();
+
         GameData.maxNumber = nPlayerNum;
         this.nMachineNum = GameData.maxNumber;
         //最多4个电机
@@ -503,6 +515,8 @@ cc.Class({
 
     OnClickStartGameSingle()
     {
+        this.HideHelpNode();
+
         this.nMachineNum = 5;
         GameDefine.nGameType = 0;
         GameDefine.bIAmMonster = true;
@@ -563,8 +577,10 @@ cc.Class({
         if(GameDefine.nGameType == 1)
         {
             engine.prototype.leaveRoom();
-
-            AgoraManager.LeaveAgoraRoom();
+            try
+            {
+                AgoraManager.LeaveAgoraRoom();
+            } catch (e) {}
         }
         else
         {
