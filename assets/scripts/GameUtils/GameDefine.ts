@@ -15,6 +15,8 @@ export class GameDefine
     static nCatchedNum: number = 0;        //自己是猎人抓住多少
     static nGameType: number = 1;//0,单人   1,多人
 
+
+    static bGameJoyStick:boolean = true; //现在游戏可以使用摇杆控制
     /////////////////////////////////////////////////////
     //随机数
     ////////////////////////////////////////////////////

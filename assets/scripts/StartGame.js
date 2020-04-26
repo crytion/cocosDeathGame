@@ -79,6 +79,18 @@ cc.Class({
             type: cc.Label,
             default: null
         },
+        nodeJoystick: {
+            type: cc.Node,
+            default: null
+        },
+        nodeJoystickBg: {
+            type: cc.Node,
+            default: null
+        },
+        nodeJoystickBall: {
+            type: cc.Node,
+            default: null
+        },
 
         prefabPlayer: null,
         prefabWall: null,
@@ -107,11 +119,13 @@ cc.Class({
 
         nCountDownTime: 285, //整个游戏的倒计时,计时结束就算猎物逃不了,4分44秒
 
-        nodeMyVoice:null,
-        nodeOtherVoice:null,
+        nodeMyVoice: null,
+        nodeOtherVoice: null,
 
-        labelMyVoice:null,
-        labelOtherVoice:null,
+        labelMyVoice: null,
+        labelOtherVoice: null,
+
+        posCurrentJoyStick: cc.v2(0, 0),  //缓存下摇杆珠的位置,用来计算玩家的移动方向
     },
 
 
@@ -133,6 +147,7 @@ cc.Class({
         this.nodeControl.active = false;
         this.nodeMask.active = false;
         this.labelCountDown.node.active = false;
+        this.nodeJoystick.active = false;
         this.arrPlayerMoveStatus = [];
         this.arrPlayerInfo = [];
         this.nodeWaitPlayerArr = [];
@@ -166,6 +181,7 @@ cc.Class({
         AgoraDefine.bMyVoiceOpened = true;
         AgoraDefine.bOtherVoiceOpened = true;
 
+        this.posCurrentJoyStick = cc.v2(0, 0);
     },
 
     onLoad()
@@ -288,6 +304,11 @@ cc.Class({
 
         this.nodeMyVoice.on("click", this.OnClickMyVoice, this);
         this.nodeOtherVoice.on("click", this.OnClickOtherVoice, this);
+
+        this.nodeJoystickBg.on(cc.Node.EventType.TOUCH_START, this.JoyStickTouchStart, this);
+        this.nodeJoystickBg.on(cc.Node.EventType.TOUCH_MOVE, this.JoyStickTouchMove, this);
+        this.nodeJoystickBg.on(cc.Node.EventType.TOUCH_END, this.JoyStickTouchEnd, this);
+        this.nodeJoystickBg.on(cc.Node.EventType.TOUCH_CANCEL, this.JoyStickTouchEnd, this);
     },
 
     RemoveAllEvent()
@@ -304,6 +325,51 @@ cc.Class({
         cc.systemEvent.off(CrtEventType.PlayerCatchedNotify, this.OnOtherPlayerCatched, this);
         cc.systemEvent.off(CrtEventType.PlayerFixedNotify, this.OnOtherMachineFixed, this);
 
+    },
+
+    JoyStickTouchStart(event)
+    {
+        let posLocal = event.getLocation();
+        posLocal = this.nodeJoystickBg.convertToNodeSpaceAR(posLocal);
+        this.posCurrentJoyStick = posLocal;
+
+        this.nodeJoystickBall.setPosition(this.posCurrentJoyStick);
+
+        this.bCanMove = true;
+
+    },
+
+    JoyStickTouchMove(event)
+    {
+        let posLocal = event.getLocation();
+        posLocal = this.nodeJoystickBg.convertToNodeSpaceAR(posLocal);
+        this.posCurrentJoyStick = posLocal;
+
+        //移动到范围外, 最多移动到半径位置
+        let fPosLength = posLocal.mag();
+        if(fPosLength > 75)
+        {
+            let fSin = posLocal.y/fPosLength;
+            let fCos = posLocal.x/fPosLength;
+            let fMaxX = 75*fCos;
+            let fMaxY = 75*fSin;
+
+            this.nodeJoystickBall.setPosition(fMaxX, fMaxY);
+        }
+        else
+        {
+            this.nodeJoystickBall.setPosition(this.posCurrentJoyStick);
+        }
+
+    },
+
+    JoyStickTouchEnd(event)
+    {
+        let posLocal = event.getLocation();
+        this.posCurrentJoyStick = cc.v2(0, 0);
+
+        this.nodeJoystickBall.setPosition(this.posCurrentJoyStick);
+        this.bCanMove = false;
     },
 
     HideHelpNode()
@@ -873,7 +939,19 @@ cc.Class({
     //pc端按键控制WASD
     AddControlFunc()
     {
-        this.nodeControl.active = true;
+        if(GameDefine.bGameJoyStick)
+        {
+            this.nodeControl.active = false;
+            this.nodeJoystick.active = true;
+        }
+        else
+        {
+            this.nodeControl.active = true;
+            this.nodeJoystick.active = false;
+        }
+
+
+
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.OnKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.OnKeyUp, this);
     },
@@ -985,6 +1063,7 @@ cc.Class({
     {
         this.nUpdateCounts++;
 
+
         if (this.bGameStarted && this.bCanMove && this.arrPlayerMoveStatus.length > 0)
         {
             switch (this.arrPlayerMoveStatus[this.arrPlayerMoveStatus.length - 1])
@@ -1020,17 +1099,25 @@ cc.Class({
 
             }
         }
-        else
+        else if (this.bGameStarted && this.bCanMove && this.posCurrentJoyStick.mag() > 10)
         {
+            //算出joystick的正弦余弦, 乘上移动速度,就是x和y方向上的移动速度了.
+            let fSin = this.posCurrentJoyStick.y / this.posCurrentJoyStick.mag();
+            let fCos = this.posCurrentJoyStick.x / this.posCurrentJoyStick.mag();
+            let fPerMoveX = this.fPerFrameSpeed * fCos;
+            let fPerMoveY = this.fPerFrameSpeed * fSin;
 
+            this.nodeMainPlayer.y += fPerMoveY;
+            this.nodeMainPlayer.x += fPerMoveX;
         }
+
 
         this.UpdateCameraPosition();
 
-        if(this.bGameStarted)
+        if (this.bGameStarted)
         {
             //60%2, 每秒30次校验位置
-            if(this.nUpdateCounts % 2 === 0)
+            if (this.nUpdateCounts % 2 === 0)
             {
                 let strData = {
                     "msgType": MsgType.msgPlayerMove,

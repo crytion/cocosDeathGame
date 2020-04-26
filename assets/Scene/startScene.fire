@@ -84,16 +84,16 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 122
+        "__id__": 127
       },
       {
-        "__id__": 123
+        "__id__": 128
       },
       {
-        "__id__": 124
+        "__id__": 129
       },
       {
-        "__id__": 125
+        "__id__": 130
       }
     ],
     "_prefab": null,
@@ -183,7 +183,7 @@
       "array": [
         0,
         0,
-        377.8035824009614,
+        383.64925387650635,
         0,
         0,
         0,
@@ -281,7 +281,7 @@
       "array": [
         0,
         0,
-        377.8035824009614,
+        383.64925387650635,
         0,
         0,
         0,
@@ -379,7 +379,7 @@
       "array": [
         0,
         0,
-        377.8035824009614,
+        383.64925387650635,
         0,
         0,
         0,
@@ -3930,13 +3930,16 @@
         "__id__": 109
       },
       {
-        "__id__": 116
+        "__id__": 114
       },
       {
-        "__id__": 118
+        "__id__": 121
       },
       {
-        "__id__": 120
+        "__id__": 123
+      },
+      {
+        "__id__": 125
       }
     ],
     "_active": true,
@@ -5466,7 +5469,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btnLoginOut",
+    "_name": "nodeJoyStick",
     "_objFlags": 0,
     "_parent": {
       "__id__": 79
@@ -5476,10 +5479,264 @@
         "__id__": 110
       }
     ],
+    "_active": false,
+    "_components": [],
+    "_prefab": null,
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": "95bCwWy7ZDNZEoPWYa1yEl"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "joystickBg",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 109
+    },
+    "_children": [
+      {
+        "__id__": 111
+      }
+    ],
     "_active": true,
     "_components": [
       {
+        "__id__": 113
+      }
+    ],
+    "_prefab": null,
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 150,
+      "height": 150
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        -330,
+        -110,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": "79AmBduwtBR4NYoSV1EF7C"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "joystick",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 110
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 112
+      }
+    ],
+    "_prefab": null,
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 50,
+      "height": 50
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": "f059k+/w5E1ZgyMGD8CkBR"
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 111
+    },
+    "_enabled": true,
+    "_materials": [
+      {
+        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+      }
+    ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_spriteFrame": {
+      "__uuid__": "3822fd19-b3e2-48d5-801e-219ae8a15a6b"
+    },
+    "_type": 0,
+    "_sizeMode": 0,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_atlas": null,
+    "_id": "e5SlXQTWhC8Lj0nsZ+hp52"
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 110
+    },
+    "_enabled": true,
+    "_materials": [
+      {
+        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+      }
+    ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_spriteFrame": {
+      "__uuid__": "99e002df-885a-4f1e-9625-91f3352f3c63"
+    },
+    "_type": 0,
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_atlas": null,
+    "_id": "07k41cvkRP8YfaTemLb1bx"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "btnLoginOut",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 79
+    },
+    "_children": [
+      {
         "__id__": 115
+      }
+    ],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 120
       }
     ],
     "_prefab": null,
@@ -5535,20 +5792,20 @@
     "_name": "Background",
     "_objFlags": 512,
     "_parent": {
-      "__id__": 109
+      "__id__": 114
     },
     "_children": [
       {
-        "__id__": 111
+        "__id__": 116
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 113
+        "__id__": 118
       },
       {
-        "__id__": 114
+        "__id__": 119
       }
     ],
     "_prefab": null,
@@ -5604,13 +5861,13 @@
     "_name": "Label",
     "_objFlags": 512,
     "_parent": {
-      "__id__": 110
+      "__id__": 115
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 112
+        "__id__": 117
       }
     ],
     "_prefab": null,
@@ -5666,7 +5923,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 111
+      "__id__": 116
     },
     "_enabled": true,
     "_materials": [
@@ -5698,7 +5955,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 110
+      "__id__": 115
     },
     "_enabled": true,
     "_materials": [
@@ -5730,7 +5987,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 110
+      "__id__": 115
     },
     "_enabled": true,
     "alignMode": 0,
@@ -5757,7 +6014,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 109
+      "__id__": 114
     },
     "_enabled": true,
     "_normalMaterial": null,
@@ -5830,7 +6087,7 @@
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
     },
     "_N$target": {
-      "__id__": 110
+      "__id__": 115
     },
     "_id": "0c17XtahpGYLsJ+sM916v9"
   },
@@ -5845,7 +6102,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 117
+        "__id__": 122
       }
     ],
     "_prefab": null,
@@ -5901,7 +6158,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 116
+      "__id__": 121
     },
     "_enabled": true,
     "_materials": [
@@ -5939,7 +6196,7 @@
     "_active": false,
     "_components": [
       {
-        "__id__": 119
+        "__id__": 124
       }
     ],
     "_prefab": null,
@@ -5995,7 +6252,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 118
+      "__id__": 123
     },
     "_enabled": true,
     "_materials": [
@@ -6033,7 +6290,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 121
+        "__id__": 126
       }
     ],
     "_prefab": null,
@@ -6089,7 +6346,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 120
+      "__id__": 125
     },
     "_enabled": true,
     "_materials": [
@@ -6213,16 +6470,25 @@
       "__id__": 86
     },
     "btnLoginOut": {
-      "__id__": 115
+      "__id__": 120
     },
     "labelGame": {
-      "__id__": 117
+      "__id__": 122
     },
     "labelTooClose": {
-      "__id__": 119
+      "__id__": 124
     },
     "labelCountDown": {
-      "__id__": 121
+      "__id__": 126
+    },
+    "nodeJoystick": {
+      "__id__": 109
+    },
+    "nodeJoystickBg": {
+      "__id__": 110
+    },
+    "nodeJoystickBall": {
+      "__id__": 111
     },
     "prefabPlayer": null,
     "prefabWall": null,
