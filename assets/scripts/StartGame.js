@@ -3,6 +3,10 @@ import {GameDefine} from "./GameUtils/GameDefine";
 let GameData = require('./1/ExamplesData');
 let engine = require('./1/MatchvsEngine');
 
+
+// 445 2020 0426 15:26
+
+
 cc.Class({
     extends: cc.Component,
 
@@ -206,13 +210,13 @@ cc.Class({
         this.btnReLogin.node.on("click", this.OnClickRelogin, this);
         this.btnLoginOut.node.on("click", this.OnClickLoginOut, this);
 
-
-        this.nodeMyVoice = this.nodeControl.getChildByName("btnMyVoice");
-        this.nodeOtherVoice = this.nodeControl.getChildByName("btnOtherVoice");
-
-        this.labelMyVoice = this.nodeMyVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
-        this.labelOtherVoice = this.nodeOtherVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
-
+        if(GameDefine.bAgoraVoiceEnable)
+        {
+            this.nodeMyVoice = this.nodeControl.getChildByName("btnMyVoice");
+            this.nodeOtherVoice = this.nodeControl.getChildByName("btnOtherVoice");
+            this.labelMyVoice = this.nodeMyVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+            this.labelOtherVoice = this.nodeOtherVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+        }
 
         //添加网络事件的监听和虚拟按键的监听
         this.AddEventListener();
@@ -1106,7 +1110,6 @@ cc.Class({
             let fCos = this.posCurrentJoyStick.x / this.posCurrentJoyStick.mag();
             let fPerMoveX = this.fPerFrameSpeed * fCos;
             let fPerMoveY = this.fPerFrameSpeed * fSin;
-
             this.nodeMainPlayer.y += fPerMoveY;
             this.nodeMainPlayer.x += fPerMoveX;
         }

@@ -14,9 +14,8 @@ export class GameDefine
     static bIAmMonster: boolean = false;  //自己是不是猎人
     static nCatchedNum: number = 0;        //自己是猎人抓住多少
     static nGameType: number = 1;//0,单人   1,多人
-
-
-    static bGameJoyStick:boolean = true; //现在游戏可以使用摇杆控制
+    static bGameJoyStick: boolean = true; //现在游戏可以使用摇杆控制
+    static bAgoraVoiceEnable: boolean = false; //语音交流的开关
     /////////////////////////////////////////////////////
     //随机数
     ////////////////////////////////////////////////////
