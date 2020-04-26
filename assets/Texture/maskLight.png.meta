@@ -11,7 +11,7 @@
   "height": 200,
   "platformSettings": {},
   "subMetas": {
-    "fishing_newGuide_growMaskLight": {
+    "maskLight": {
       "ver": "1.0.4",
       "uuid": "ace4da7f-a582-44c3-ae5b-c3b656455b73",
       "rawTextureUuid": "ce3b2a14-af69-46c5-9179-078db6e87bac",
