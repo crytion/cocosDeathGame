@@ -179,6 +179,7 @@ cc.Class({
         ];
 
         this.ShowHelpNode();
+
         //重置语音聊天的数据
         this.labelMyVoice.string = "关闭麦克风";
         this.labelOtherVoice.string = "静音别人";
@@ -210,12 +211,18 @@ cc.Class({
         this.btnReLogin.node.on("click", this.OnClickRelogin, this);
         this.btnLoginOut.node.on("click", this.OnClickLoginOut, this);
 
-        if(GameDefine.bAgoraVoiceEnable)
+
+        this.nodeMyVoice = this.nodeControl.getChildByName("btnMyVoice");
+        this.nodeOtherVoice = this.nodeControl.getChildByName("btnOtherVoice");
+        this.labelMyVoice = this.nodeMyVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+        this.labelOtherVoice = this.nodeOtherVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+
+        this.nodeMyVoice.on("click", this.OnClickMyVoice, this);
+        this.nodeOtherVoice.on("click", this.OnClickOtherVoice, this);
+        if (!GameDefine.bAgoraVoiceEnable)
         {
-            this.nodeMyVoice = this.nodeControl.getChildByName("btnMyVoice");
-            this.nodeOtherVoice = this.nodeControl.getChildByName("btnOtherVoice");
-            this.labelMyVoice = this.nodeMyVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
-            this.labelOtherVoice = this.nodeOtherVoice.getChildByName("Background").getChildByName("Label").getComponent(cc.Label);
+            this.nodeMyVoice.active = false;
+            this.nodeOtherVoice.active = false;
         }
 
         //添加网络事件的监听和虚拟按键的监听
@@ -255,7 +262,6 @@ cc.Class({
             this.nodeHelp = cc.instantiate(res);
             this.nodeGameParent.addChild(this.nodeHelp);
         });
-
     },
 
     ResizeMaskSize()
@@ -305,9 +311,6 @@ cc.Class({
         this.SetNodeControl(nodeDown, MoveStatus.Status_DOWN);
         this.SetNodeControl(nodeLeft, MoveStatus.Status_LEFT);
         this.SetNodeControl(nodeRight, MoveStatus.Status_RIGHT);
-
-        this.nodeMyVoice.on("click", this.OnClickMyVoice, this);
-        this.nodeOtherVoice.on("click", this.OnClickOtherVoice, this);
 
         this.nodeJoystickBg.on(cc.Node.EventType.TOUCH_START, this.JoyStickTouchStart, this);
         this.nodeJoystickBg.on(cc.Node.EventType.TOUCH_MOVE, this.JoyStickTouchMove, this);
