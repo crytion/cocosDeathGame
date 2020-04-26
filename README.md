@@ -1,3 +1,6 @@
+https://forum.cocos.org/t/topic/91610/8
+项目详细介绍
+
 # SimpleDeathGame
 # creator制作的低配版黎明杀机
 # 游戏最多5人匹配
