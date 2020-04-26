@@ -491,7 +491,7 @@ cc.Class({
         this.nodeWaitPlayerArr.push(nodeWait1);
 
         let onePlayer = new OnePlayerInfo(GameData.userID, GameData.userName);
-        this.SavePushPlayerInfo(onePlayer);
+        this.SafePushPlayerInfo(onePlayer);
 
         this.roomUserList = roomInfo.userInfoList;        //除了自己的其他人
         this.SetWaitingNodeShow();
@@ -519,7 +519,7 @@ cc.Class({
             let strName = this.roomUserList[i].userProfile;
             let strID = this.roomUserList[i].userID;
             let onePlayer = new OnePlayerInfo(strID, strName);
-            this.SavePushPlayerInfo(onePlayer);
+            this.SafePushPlayerInfo(onePlayer);
 
             let nodeWait2 = cc.instantiate(this.prefabWaitPlayer);
             this.nodeWaitUI.addChild(nodeWait2);
@@ -599,10 +599,10 @@ cc.Class({
         for (let i = 0; i < 6; i++)
         {
             let onePlayer = new OnePlayerInfo(GameDefine.GetRandNum(1, 99999), GameDefine.GetRandNum(1, 99999));
-            this.SavePushPlayerInfo(onePlayer);
+            this.SafePushPlayerInfo(onePlayer);
         }
         let onePlayer = new OnePlayerInfo(GameData.userID, GameData.userName);
-        this.SavePushPlayerInfo(onePlayer);
+        this.SafePushPlayerInfo(onePlayer);
 
         this.StartGame();
         this.OnGamePlayerAllotOver(GameData.userID);
@@ -1332,7 +1332,7 @@ cc.Class({
         return this.resourceUtils;
     },
 
-    SavePushPlayerInfo(onePlayer)
+    SafePushPlayerInfo(onePlayer)
     {
         if(this.arrPlayerInfo.length > 0)
         {
