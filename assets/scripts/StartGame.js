@@ -1209,7 +1209,7 @@ cc.Class({
                     }
 
                     let nDistance = myPos.sub(otherPos).mag();
-                    if (nDistance <= 80)
+                    if (nDistance <= 40)
                     {
                         let nUserID = this.arrPlayerInfo[i].nPlayerUserID;
                         this.arrPlayerInfo[i].playerNode.active = false;
