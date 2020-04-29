@@ -131,12 +131,15 @@ cc.Class({
         labelOtherVoice: null,
 
         posCurrentJoyStick: cc.v2(0, 0),  //缓存下摇杆珠的位置,用来计算玩家的移动方向
+
+        bInArrowFadeAction: false,  //游戏开始,让指针闪动,闪动途中不用检验别的指针
     },
 
 
     //将游戏重置为登录状态
     ResetGameUI()
     {
+        this.bInArrowFadeAction = false;
         this.nCountDownTime = 285;
         this.nMonsterUserID = 0;
         this.nMachineNum = 0;
@@ -167,10 +170,10 @@ cc.Class({
         this.nodeMask.setPosition(cc.v2(0,0));
         //X个人类位, 其中一个会变猎人
         this.postionManArr = [
-            cc.v2(67*5, 148*5), cc.v2(383*5, 90*5),
-            cc.v2(-131*5, 185*5), cc.v2(192*5, 211*5),
-            cc.v2(-219*5, -157*5), cc.v2(-382*5, -117*5),
-            cc.v2(405*5, -74*5), cc.v2(-337*5, 162*5),];
+            cc.v2(320, 790), cc.v2(1650, 1160),
+            cc.v2(-655, 925), cc.v2(960, 1055),
+            cc.v2(-1226, -865), cc.v2(-1876, -550),
+            cc.v2(2025, -370), cc.v2(-1685, 810),];
         this.postionMachineArr = [
             cc.v2(0, -213*5),
             cc.v2(0, 169*5),
@@ -832,6 +835,11 @@ cc.Class({
         //游戏开始, update运行
         this.bGameStarted = true;
         this.labelCountDown.node.active = true;
+
+
+
+
+        this.FadeOnceAllArrowNode();
     },
 
     CreatePlayerNode()
@@ -1298,23 +1306,25 @@ cc.Class({
             let posMachine = oneMachine.getPosition();
             let nDistance = myPos.sub(posMachine).mag();
 
-            //距离你较近的电机就显示方向
-            if (nDistance > 200 && nDistance < 900)
+            if(!this.bInArrowFadeAction)
             {
-                this.nodeArrowNodeArr[i].active = true;
-                //向量减法
-                let vec = posMachine.sub(myPos);
-                vec.x = vec.x/15 + myPos.x;
-                vec.y = vec.y/15 + myPos.y;
+                //距离你较近的电机就显示方向
+                if (nDistance > 200 && nDistance < 900)
+                {
+                    this.nodeArrowNodeArr[i].stopAllActions();
+                    this.nodeArrowNodeArr[i].active = true;
+                    //向量减法
+                    let vec = posMachine.sub(myPos);
+                    vec.x = vec.x/15 + myPos.x;
+                    vec.y = vec.y/15 + myPos.y;
 
-                this.nodeArrowNodeArr[i].setPosition(vec);
-                // cc.error("kaskaskaskaskaskaskaskaskaskaskasds" + JSON.stringify(vec));
+                    this.nodeArrowNodeArr[i].setPosition(vec);
+                }
+                else
+                {
+                    this.nodeArrowNodeArr[i].active = false;
+                }
             }
-            else
-            {
-                this.nodeArrowNodeArr[i].active = false;
-            }
-
 
             let nCurrentProgress = oneMachine.getComponent(MachineControl).GetProgress();
             if (nCurrentProgress >= 100)
@@ -1342,6 +1352,42 @@ cc.Class({
         this.bGameStarted = false;
     },
 
+    //游戏开始一秒.提醒玩家电机位置一次
+    FadeOnceAllArrowNode()
+    {
+        let myPos = this.nodeMainPlayer.getPosition();
+
+        for (let i = 0; i < this.nMachineNum; i++)
+        {
+            let oneMachine = this.nodeMachineNodeArr[i];
+            let posMachine = oneMachine.getPosition();
+            let nDistance = myPos.sub(posMachine).mag();
+
+            if (nDistance >= 900)
+            {
+                this.bInArrowFadeAction = true;
+
+                this.nodeArrowNodeArr[i].active = true;
+                //向量减法
+                let vec = posMachine.sub(myPos);
+                vec.x = vec.x / 15 + myPos.x;
+                vec.y = vec.y / 15 + myPos.y;
+                this.nodeArrowNodeArr[i].setPosition(vec);
+                this.nodeArrowNodeArr[i].opacity = 255;
+                this.nodeArrowNodeArr[i].runAction(cc.sequence(cc.fadeOut(2), cc.callFunc(() =>
+                {
+                    this.bInArrowFadeAction = false;
+
+                    this.nodeArrowNodeArr[i].opacity = 255;
+                    this.nodeArrowNodeArr[i].active = false;
+                })))
+            }
+            else
+            {
+                this.nodeArrowNodeArr[i].active = false;
+            }
+        }
+    },
 
     GetResourceUtils()
     {

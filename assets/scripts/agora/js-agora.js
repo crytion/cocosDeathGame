@@ -119,7 +119,9 @@
         };
     }
     if ((typeof AgoraRTC) !== "undefined") {
-        if (!AgoraRTC.checkSystemRequirements()) {
+        if (!AgoraRTC.checkSystemRequirements())
+        {
+            return;
             alert("Your browser does not support WebRTC!");
         }
         if (agora.client == null) agora.client = AgoraRTC.createClient({
