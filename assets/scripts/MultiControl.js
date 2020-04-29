@@ -1,7 +1,7 @@
-var engine = require('./1/MatchvsEngine');
-var response = require("./1/MatchvsResponse");
-var msg = require("./1/MatvhsvsMessage");
-var GameData = require('./1/ExamplesData');
+var engine = require('./MatchvsManager/MatchvsEngine');
+var response = require("./MatchvsManager/MatchvsResponse");
+var msg = require("./MatchvsManager/MatvhsvsMessage");
+var GameData = require('./MatchvsManager/ExamplesData');
 
 cc.Class({
     extends: cc.Component,

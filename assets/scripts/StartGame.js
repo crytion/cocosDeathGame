@@ -1,7 +1,8 @@
 import {GameDefine} from "./GameUtils/GameDefine";
+import {WallControl} from "./WallControl";
 
-let GameData = require('./1/ExamplesData');
-let engine = require('./1/MatchvsEngine');
+let GameData = require('./MatchvsManager/ExamplesData');
+let engine = require('./MatchvsManager/MatchvsEngine');
 
 
 // 445 2020 0426 15:26
@@ -842,10 +843,17 @@ cc.Class({
             this.nodeGameParent.addChild(nodePlayer);
             oneInfo.SetPlayerNode(nodePlayer);
 
-            if(oneInfo.nPlayerUserID == GameData.userID)
+            let MonsterControl = window["MonsterControl"];
+            let ManPlayerControl = window["ManPlayerControl"];
+
+            if(parseInt(oneInfo.nPlayerUserID) === parseInt(GameData.userID))
             {
                 this.nodeMainPlayer = nodePlayer;
-
+                this.nodeMainPlayer.addComponent(ManPlayerControl);
+            }
+            else
+            {
+                nodePlayer.addComponent(MonsterControl);
             }
         }
     },
@@ -905,12 +913,11 @@ cc.Class({
             return;
         }
         let arr = [];
-        // for (let i = 0; i < 200; i++)
-        for (let i = 0; i < mapWallData.length; i++)
+        for (let i = 0; i < 200; i++)
         {
             let oneWall = cc.instantiate(this.prefabWall);
 
-            // 这个段可以随机生成墙体,存到arr数组中,遇到喜欢的地形就可以直接把arr的信息复制到mapWallData数据中
+            // // //这个段可以随机生成墙体,存到arr数组中,遇到喜欢的地形就可以直接把arr的信息复制到mapWallData数据中
             // let nRandomX = GameDefine.GetRandNum(-2500, 2500);
             // let nRandomY = GameDefine.GetRandNum(-1200, 1200);
             // let bLegel = (nRandomX<-100 || nRandomX>100) && (nRandomY<-100 || nRandomY>100);
@@ -921,10 +928,13 @@ cc.Class({
             //     bLegel = (nRandomX<-100 || nRandomX>100) && (nRandomY<-100 || nRandomY>100);
             // }
             // oneWall.setPosition(nRandomX, nRandomY);
-            // let fRandScaleX = Math.random() * 2.5 + 0.5;
-            // let fRandScaleY = Math.random() * 2.5 + 0.5;
+            // let fRandScaleX = parseFloat((Math.random() * 2.5 + 0.5).toFixed(3));
+            // let fRandScaleY = parseFloat((Math.random() * 2.5 + 0.5).toFixed(3));
             // oneWall.setScale(fRandScaleX, fRandScaleY);
-            // let oneNodeShuxin = {positionx: nRandomX, positiony: nRandomY, scalex:fRandScaleX, scaley:fRandScaleY};
+            // let nAngle = GameDefine.GetRandNum(0, 360);
+            // oneWall.angle = nAngle;
+            //
+            // let oneNodeShuxin = {positionx: nRandomX, positiony: nRandomY, scalex:fRandScaleX, scaley:fRandScaleY, nAngle:nAngle};
             // arr.push(oneNodeShuxin);
 
             let oneWallShuxin = mapWallData[i];
@@ -932,15 +942,20 @@ cc.Class({
             let nY = oneWallShuxin.positiony;
             let fScX = oneWallShuxin.scalex;
             let fScY = oneWallShuxin.scaley;
+            let nAngle = oneWallShuxin.nAngle;
             oneWall.setPosition(nX, nY);
             oneWall.setScale(fScX, fScY);
+            oneWall.angle = nAngle;
 
             this.arrWallNode.push(oneWall);
             this.nodeGameParent.addChild(oneWall);
 
+            oneWall.getComponent(WallControl).SetWallInfo(i);
+
         }
         // cc.log("ppppppppp===>" + arr.length);
         // cc.log("ppppppppp===>" + JSON.stringify(arr));
+
     },
 
     //pc端按键控制WASD
@@ -1282,8 +1297,8 @@ cc.Class({
             let posMachine = oneMachine.getPosition();
             let nDistance = myPos.sub(posMachine).mag();
 
-            //距离远的机子就显示方向
-            if (nDistance > 300)
+            //距离你较近的电机就显示方向
+            if (nDistance > 200 && nDistance < 900)
             {
                 this.nodeArrowNodeArr[i].active = true;
                 //向量减法

@@ -183,7 +183,7 @@
       "array": [
         0,
         0,
-        383.64925387650635,
+        168.09999652214506,
         0,
         0,
         0,
@@ -281,7 +281,7 @@
       "array": [
         0,
         0,
-        383.64925387650635,
+        168.09999652214506,
         0,
         0,
         0,
@@ -379,7 +379,7 @@
       "array": [
         0,
         0,
-        383.64925387650635,
+        168.09999652214506,
         0,
         0,
         0,
@@ -5482,7 +5482,7 @@
     "_active": false,
     "_components": [],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 100,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -6519,6 +6519,11 @@
     "nodeOtherVoice": null,
     "labelMyVoice": null,
     "labelOtherVoice": null,
+    "posCurrentJoyStick": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
     "_id": "15MtUQTJdDaYnpuN1/2xHk"
   }
 ]
