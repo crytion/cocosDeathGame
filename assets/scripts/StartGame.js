@@ -167,7 +167,7 @@ cc.Class({
         this.nodeMask.setPosition(cc.v2(0,0));
         //X个人类位, 其中一个会变猎人
         this.postionManArr = [
-            cc.v2(67*5, 148*5), cc.v2(383*5, 96*5),
+            cc.v2(67*5, 148*5), cc.v2(383*5, 90*5),
             cc.v2(-131*5, 185*5), cc.v2(192*5, 211*5),
             cc.v2(-219*5, -157*5), cc.v2(-382*5, -117*5),
             cc.v2(405*5, -74*5), cc.v2(-337*5, 162*5),];
@@ -576,8 +576,9 @@ cc.Class({
         this.HideHelpNode();
 
         GameData.maxNumber = nPlayerNum;
+        //比如两人游戏,就两个电机,随便修一个就赢了
         this.nMachineNum = GameData.maxNumber;
-        //最多4个电机
+        //最多5个电机
         this.nMachineNum = this.nMachineNum > 5 ? 5 : this.nMachineNum;
 
         GameDefine.nGameType = 1;
@@ -714,7 +715,7 @@ cc.Class({
 
         if (nCatchNum == (GameData.maxNumber - 1))
         {
-            this.ShowLabelGame("游戏结束!!!!!!", this.OnClickLoginOut.bind(this));
+            this.ShowLabelGame("所有猎物都被抓住,游戏失败!!", this.OnClickLoginOut.bind(this));
             this.bGameStarted = false;
         }
         else
@@ -1224,7 +1225,7 @@ cc.Class({
                         // cc.error("抓到一个人==== " + GameDefine.nCatchedNum);
                         if (GameDefine.nCatchedNum == (GameData.maxNumber - 1))
                         {
-                            this.ShowLabelGame("游戏结束!!!!!!", this.OnClickLoginOut.bind(this));
+                            this.ShowLabelGame("恭喜你抓住所有猎物,游戏结束!", this.OnClickLoginOut.bind(this));
                             this.bGameStarted = false;
                         }
                     }
