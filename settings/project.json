@@ -55,7 +55,6 @@
     "GameCamera",
     "UICamera"
   ],
-  "start-scene": "40b216a6-400d-4970-90a2-5dbe0de56050",
   "design-resolution-width": 960,
   "design-resolution-height": 640,
   "fit-width": false,
@@ -79,5 +78,6 @@
       "enable": false
     }
   },
-  "migrate-history": []
+  "migrate-history": [],
+  "start-scene": "current"
 }

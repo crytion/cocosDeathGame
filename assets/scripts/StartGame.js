@@ -3,6 +3,7 @@ import {WallControl} from "./WallControl";
 
 let GameData = require('./MatchvsManager/ExamplesData');
 let engine = require('./MatchvsManager/MatchvsEngine');
+let PF = require('./GameUtils/pathfinding');
 
 
 // 445 2020 0426 15:26
@@ -166,8 +167,8 @@ cc.Class({
         GameDefine.nGameType = 0;
         this.labelGame.string = "";
         this.labelTooClose.node.active = false;
-        this.mainCamera.node.setPosition(cc.v2(0,0));
-        this.nodeMask.setPosition(cc.v2(0,0));
+        this.mainCamera.node.setPosition(cc.v2(0, 0));
+        this.nodeMask.setPosition(cc.v2(0, 0));
         //X个人类位, 其中一个会变猎人
         this.postionManArr = [
             cc.v2(320, 790), cc.v2(1650, 1160),
@@ -175,10 +176,10 @@ cc.Class({
             cc.v2(-1226, -865), cc.v2(-1876, -550),
             cc.v2(2025, -370), cc.v2(-1685, 810),];
         this.postionMachineArr = [
-            cc.v2(0, -213*5),
-            cc.v2(0, 169*5),
-            cc.v2(-320*5, 0),
-            cc.v2(329*5, 0),
+            cc.v2(0, -213 * 5),
+            cc.v2(0, 169 * 5),
+            cc.v2(-320 * 5, 0),
+            cc.v2(329 * 5, 0),
             cc.v2(0, 0),
         ];
 
@@ -195,6 +196,61 @@ cc.Class({
 
     onLoad()
     {
+        //
+        // let mapData = [
+        //     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        //     [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        //     [1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1],
+        //     [1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        //     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]];
+        //
+        // //
+        // // var nnn = [
+        // //     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        // //     [1,9,9,9,1,9,9,9,9,9,9,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,0,9,9,9,0,0,0,0,0,0,0,1,1],
+        // //     [1,0,1,9,1,9,1,0,0,0,0,0,0,0,9,1,1,1,1,1,1,1,1,1],
+        // //     [1,0,1,9,9,9,1,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,1],
+        // //     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]];
+        //
+        // // 抽象化地图数据
+        // var grid = new PF.Grid(24, 14, mapData);
+        // // 实例化A*寻路
+        // var finder = new PF.AStarFinder();
+        // var gridBackup = grid.clone();
+        //
+        // var path = finder.findPath(1, 1, 22, 12, gridBackup);
+        //
+        // for(let i in path)
+        // {
+        //     let runedPath = path[i];
+        //
+        //     mapData[runedPath[1]][runedPath[0]] = 9;
+        // }
+        // for(let i in mapData)
+        // {
+        //     cc.error("a== "+(i%10) +"  "+ JSON.stringify(mapData[i]));
+        //
+        // }
+        // return;
+
         //开启碰撞
         let manager = cc.director.getPhysicsManager();
         manager.enabled = true;
@@ -1095,6 +1151,7 @@ cc.Class({
         this.nUpdateCounts++;
 
 
+        //使用了wasd或者虚拟按键
         if (this.bGameStarted && this.bCanMove && this.arrPlayerMoveStatus.length > 0)
         {
             switch (this.arrPlayerMoveStatus[this.arrPlayerMoveStatus.length - 1])
@@ -1130,6 +1187,7 @@ cc.Class({
 
             }
         }
+        //使用了摇杆控制
         else if (this.bGameStarted && this.bCanMove && this.posCurrentJoyStick.mag() > 10)
         {
             //算出joystick的正弦余弦, 乘上移动速度,就是x和y方向上的移动速度了.
@@ -1140,7 +1198,6 @@ cc.Class({
             this.nodeMainPlayer.y += fPerMoveY;
             this.nodeMainPlayer.x += fPerMoveX;
         }
-
 
         this.UpdateCameraPosition();
 
