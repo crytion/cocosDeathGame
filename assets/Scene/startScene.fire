@@ -612,8 +612,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 9000,
-      "height": 4500
+      "width": 5000,
+      "height": 2500
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -6436,6 +6436,7 @@
     "nodeGameParent": {
       "__id__": 11
     },
+    "mainMap": null,
     "nodeMask": {
       "__id__": 29
     },

@@ -846,15 +846,15 @@ cc.Class({
     OnGamePlayerAllotOver(nMaxPointUserID)
     {
         this.nMonsterUserID = nMaxPointUserID;
-        if(GameDefine.bIAmMonster)
+        if (GameDefine.bIAmMonster)
         {
             //初始化玩家的移动速度,猎人略快些
             this.fPerFrameSpeed = GameDefine.nMonsterMoveSpeed / cc.game.getFrameRate();
 
-            for(let i in this.arrPlayerInfo)
+            for (let i in this.arrPlayerInfo)
             {
                 let oneInfo = this.arrPlayerInfo[i];
-                let nRandomIndex = GameDefine.GetRandNum(0, this.postionManArr.length-1);
+                let nRandomIndex = GameDefine.GetRandNum(0, this.postionManArr.length - 1);
                 let posOne = this.postionManArr[nRandomIndex];
                 oneInfo.playerNode.setPosition(posOne);
                 oneInfo.playerNode.getChildByName("labelName").getComponent(cc.Label).string = "猎物";
@@ -862,17 +862,17 @@ cc.Class({
             }
 
             this.nodeMainPlayer.getChildByName("labelName").getComponent(cc.Label).string = "猎人";
-            this.nodeMask.active = true;
+            this.nodeMask.active = false;
             this.ShowLabelGame("请寻找躲起来的猎物!");
         }
         else
         {
             this.fPerFrameSpeed = GameDefine.nManMoveSpeed / cc.game.getFrameRate();
 
-            for(let i in this.arrPlayerInfo)
+            for (let i in this.arrPlayerInfo)
             {
                 let oneInfo = this.arrPlayerInfo[i];
-                let nRandomIndex = GameDefine.GetRandNum(0, this.postionManArr.length-1);
+                let nRandomIndex = GameDefine.GetRandNum(0, this.postionManArr.length - 1);
                 let posOne = this.postionManArr[nRandomIndex];
                 oneInfo.playerNode.setPosition(posOne);
                 oneInfo.playerNode.getChildByName("labelName").getComponent(cc.Label).string = "猎物";
@@ -882,8 +882,10 @@ cc.Class({
             let monsterInfo = this.GetPlayerNodeByUserID(nMaxPointUserID);
             monsterInfo.playerNode.getChildByName("labelName").getComponent(cc.Label).string = "猎人";
 
-            this.ShowLabelGame("猎人来了,破坏"+ (this.nMachineNum-1) +"个电机逃脱!");
+            this.ShowLabelGame("猎人来了,破坏" + (this.nMachineNum - 1) + "个电机逃脱!");
         }
+
+
 
         //让玩家可以控制角色
         this.AddControlFunc();
@@ -891,9 +893,6 @@ cc.Class({
         //游戏开始, update运行
         this.bGameStarted = true;
         this.labelCountDown.node.active = true;
-
-
-
 
         this.FadeOnceAllArrowNode();
     },
@@ -978,28 +977,21 @@ cc.Class({
             return;
         }
         let arr = [];
-        for (let i = 0; i < 200; i++)
+        for (let i = 0; i < 300; i++)
         {
             let oneWall = cc.instantiate(this.prefabWall);
 
-            // // //这个段可以随机生成墙体,存到arr数组中,遇到喜欢的地形就可以直接把arr的信息复制到mapWallData数据中
-            // let nRandomX = GameDefine.GetRandNum(-2500, 2500);
-            // let nRandomY = GameDefine.GetRandNum(-1200, 1200);
-            // let bLegel = (nRandomX<-100 || nRandomX>100) && (nRandomY<-100 || nRandomY>100);
-            // while (!bLegel)
-            // {
-            //     nRandomX = GameDefine.GetRandNum(-2500, 2500);
-            //     nRandomY = GameDefine.GetRandNum(-1200, 1200);
-            //     bLegel = (nRandomX<-100 || nRandomX>100) && (nRandomY<-100 || nRandomY>100);
-            // }
+            // // // //这个段可以随机生成墙体,存到arr数组中,遇到喜欢的地形就可以直接把arr的信息复制到mapWallData数据中
+            // let nRandomX = GameDefine.GetRandNum(-25, 25) * 100;
+            // let nRandomY = GameDefine.GetRandNum(-12, 12) * 100;
             // oneWall.setPosition(nRandomX, nRandomY);
-            // let fRandScaleX = parseFloat((Math.random() * 2.5 + 0.5).toFixed(3));
-            // let fRandScaleY = parseFloat((Math.random() * 2.5 + 0.5).toFixed(3));
+            // let fRandScaleX = GameDefine.GetRandNum(1, 1);
+            // let fRandScaleY = GameDefine.GetRandNum(1, 1);
             // oneWall.setScale(fRandScaleX, fRandScaleY);
             // let nAngle = GameDefine.GetRandNum(0, 360);
-            // oneWall.angle = nAngle;
+            // oneWall.angle = 0;
             //
-            // let oneNodeShuxin = {positionx: nRandomX, positiony: nRandomY, scalex:fRandScaleX, scaley:fRandScaleY, nAngle:nAngle};
+            // let oneNodeShuxin = {positionx: nRandomX, positiony: nRandomY, scalex:fRandScaleX, scaley:fRandScaleY, nAngle:oneWall.angle};
             // arr.push(oneNodeShuxin);
 
             let oneWallShuxin = mapWallData[i];
@@ -1008,6 +1000,7 @@ cc.Class({
             let fScX = oneWallShuxin.scalex;
             let fScY = oneWallShuxin.scaley;
             let nAngle = oneWallShuxin.nAngle;
+            oneWall.setAnchorPoint(0, 0);
             oneWall.setPosition(nX, nY);
             oneWall.setScale(fScX, fScY);
             oneWall.angle = nAngle;
@@ -1022,6 +1015,7 @@ cc.Class({
         // cc.log("ppppppppp===>" + JSON.stringify(arr));
 
     },
+
 
     //pc端按键控制WASD
     AddControlFunc()

@@ -11,7 +11,7 @@ var GameData = {
     appKey: 'da64ff2033f54c26bfa695b1245fd9f4#C',
     userName: '',
     maxNumber: 2,
-    userID: "",
+    userID: "00001",
     token: "",
     reset: function () {
         GameData.gameID = "";
